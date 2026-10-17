@@ -806,3 +806,223 @@ class BaseAgent:
             d = list(difflib.unified_diff(old, new, f"a/{rel}", f"b/{rel}", n=2, lineterm=""))
             out += d or [f"(no net change in {rel})"]
         return "\n".join(out) or "(no changes in this session)"
+
+    # ----------------------------------------------------------------------- #
+    # t_shell — Sandboxed komut yurutme
+    #
+    # Izinler:
+    #   - Herhangi bir okuma/sorgulama komutu calistirabilir
+    #   - Bu SESSION'da t_write_file ile YARATILAN dosyalara yazabilir
+    #     (self.originals[rel] is None  =>  session'da yaratildi, onceden yoktu)
+    #   - VAROLAN dosyalari degistiremez, silemez
+    #   - Proje disina cikamaz
+    #
+    # Subclass'lar SHELL_ALLOW setini override ederek izin listesini genisletir.
+    # ----------------------------------------------------------------------- #
+
+    # Varsayilan izin listesi — subclass override edebilir
+    SHELL_ALLOW: set = {
+        # Python / betikler
+        "python", "python3", "python3.exe", "python.exe",
+        # Paket yoneticileri (sadece install/list, proje icerisinde)
+        "pip", "pip3",
+        # Genel araclar
+        "echo", "cat", "head", "tail", "grep", "rg", "find",
+        "ls", "dir", "wc", "diff", "stat",
+        "node", "node.exe", "npm", "npx",
+        "java", "javac", "jar",
+        "gcc", "g++", "clang", "make", "cmake",
+        "cargo", "rustc",
+        "go",
+        "git",                 # sadece okuma; yazma korumasini asagida engelle
+        "curl", "wget",
+        "jq", "yq",
+        "bash", "sh", "zsh",  # betik calistirmak icin
+    }
+
+    # Bu alt-komutlar varolan dosyalari degistirebilecegi icin engellenir
+    _SHELL_BLOCK_SUBCMDS: set = {
+        # git
+        "commit", "push", "checkout", "reset", "clean", "rm", "mv",
+        "stash", "rebase", "merge", "cherry-pick", "apply",
+        # genel
+        "rm", "del", "rmdir", "remove", "unlink",
+        "mv", "move",
+        "chmod", "chown",
+        "dd", "truncate",
+        "mkfs", "format",
+    }
+
+    # Cikti karakter limiti (trunc'a gitmeden once)
+    SHELL_OUTPUT_LIMIT: int = 8000
+
+    def t_shell(self, a: dict) -> str:
+        """
+        Sandboxed komut yurutucu.
+
+        LLM cagri formati:
+            <tool>{"name": "shell", "args": {"cmd": "python3 myscript.py --flag val"}}</tool>
+
+        Opsiyonel arguman:
+            "cwd": "alt/klasor"   — proje icindeki calisma klasoru (varsayilan: proje koku)
+            "timeout": 60         — saniye (varsayilan: 60, maksimum: 300)
+
+        Kurallar (donanima kodu ile uygulanir, sadece prompt degil):
+          1. Yurutulebilir (argv[0]) SHELL_ALLOW listesinde olmalidir.
+          2. Alt-komutlar _SHELL_BLOCK_SUBCMDS listesinde olmamalidir.
+          3. Komut satiri proje disindaki mutlak yol icermemelidir.
+          4. Varolan bir dosyayi degistiren cikti yolu engellidir:
+               - Yeniden yonlendirme (> veya >>) proje-disina veya varolan dosyaya gitmemelidir.
+               - Komut satirindaki herhangi bir dosya argumani varolan bir dosyaya isaret
+                 etmemeli VE o dosya bu session'da yaratilmamis olmalidir.
+        """
+        import shlex as _shlex
+
+        cmd_str = str(a.get("cmd", "")).strip()
+        if not cmd_str:
+            return "error: 'cmd' is required"
+
+        # --- argv ayristir ---------------------------------------------------
+        try:
+            argv = _shlex.split(cmd_str)
+        except ValueError as e:
+            return f"error: could not parse command: {e}"
+        if not argv:
+            return "error: empty command"
+
+        exe = os.path.basename(argv[0]).lower().rstrip(".exe")
+        exe_full = os.path.basename(argv[0]).lower()
+
+        # --- KURAL 1: Yalnizca izin listesindeki yurutulebilirler -----------
+        if exe not in {x.lower().rstrip(".exe") for x in self.SHELL_ALLOW} and \
+           exe_full not in {x.lower() for x in self.SHELL_ALLOW}:
+            allowed_str = ", ".join(sorted(self.SHELL_ALLOW))
+            return (
+                f"error: '{argv[0]}' is not in the allowed executables list.\n"
+                f"Allowed: {allowed_str}\n"
+                "Override SHELL_ALLOW in your Agent subclass to add more."
+            )
+
+        # --- KURAL 2a: bash/sh -c engeli (shell injection bypass) -----------
+        # "bash -c 'rm ...'" gibi kullanım, kural 1'i atlatır.
+        # -c bayrağı ile birlikte kullanımı tamamen engelle.
+        if exe in ("bash", "sh", "zsh", "ksh", "fish") and "-c" in argv[1:]:
+            return (
+                "error: 'bash/sh -c <string>' is not allowed — it bypasses the safety rules.\n"
+                "Write the commands as separate tool calls, or create a script file with "
+                "write_file and run it directly (e.g. python3 myscript.sh)."
+            )
+
+        # --- KURAL 2b: Engellenmis alt-komutlar ------------------------------
+        subcmds_in_argv = {t.lower() for t in argv[1:] if re.fullmatch(r"[a-z_\-]+", t.lower())}
+        blocked = subcmds_in_argv & {s.lower() for s in self._SHELL_BLOCK_SUBCMDS}
+        if blocked:
+            return (
+                f"error: sub-command(s) {sorted(blocked)} are blocked "
+                "because they can modify or delete existing files."
+            )
+
+        # --- KURAL 3: Mutlak yol projeden kaciyor mu? -----------------------
+        for token in argv[1:]:
+            if os.path.isabs(token):
+                real = os.path.realpath(token)
+                if not (real == self.root or real.startswith(self.root + os.sep)):
+                    return (
+                        f"error: absolute path '{token}' is outside the project root.\n"
+                        f"Project root: {self.root}"
+                    )
+
+        # --- KURAL 4: Yeniden yonlendirme (> dosya) analizi -----------------
+        # Basit shell-yeniden-yonlendirme tespiti (shell=True olmadan calistirilacak)
+        redirect_target = None
+        full_cmd_for_redir = cmd_str
+        redir_match = re.search(r">>?\s*(\S+)", full_cmd_for_redir)
+        if redir_match:
+            redirect_target = redir_match.group(1)
+            redir_abs = os.path.realpath(os.path.join(self.root, redirect_target))
+            # Proje disina mi?
+            if not (redir_abs == self.root or redir_abs.startswith(self.root + os.sep)):
+                return f"error: redirect target '{redirect_target}' is outside the project root."
+            # Varolan ve bu session'da yaratilmamis bir dosyaya mi?
+            redir_rel = os.path.relpath(redir_abs, self.root).replace(os.sep, "/")
+            if os.path.exists(redir_abs) and not self._created_this_session(redir_rel):
+                return (
+                    f"error: redirect target '{redirect_target}' is a pre-existing file.\n"
+                    "Only files created in this session can be overwritten via shell.\n"
+                    "Use write_file to create a new file first."
+                )
+
+        # --- KURAL 5: Dosya argumanlari varolan dosyalara isaret ediyor mu? --
+        # Sadece yazma anlamina gelebilecek bayraklari takip eden argumanlari kontrol et
+        # (ornek: -o, --output, -out, -dest)
+        WRITE_FLAGS = {"-o", "--output", "-out", "-dest", "--out", "--dest",
+                       "-f", "--file", "--log", "--logfile"}
+        flag_next = False
+        for token in argv[1:]:
+            if token in WRITE_FLAGS:
+                flag_next = True
+                continue
+            if flag_next:
+                flag_next = False
+                tok_abs = os.path.realpath(os.path.join(self.root, token))
+                tok_rel = os.path.relpath(tok_abs, self.root).replace(os.sep, "/")
+                if os.path.exists(tok_abs) and not self._created_this_session(tok_rel):
+                    return (
+                        f"error: output path '{token}' is a pre-existing file.\n"
+                        "Only files created in this session can be overwritten via shell.\n"
+                        "Use write_file to create a new file first, then re-run."
+                    )
+
+        # --- CWD coz ---------------------------------------------------------
+        cwd_arg = str(a.get("cwd", "")).strip()
+        if cwd_arg:
+            cwd_abs = os.path.realpath(os.path.join(self.root, cwd_arg.lstrip("/")))
+            if not (cwd_abs == self.root or cwd_abs.startswith(self.root + os.sep)):
+                return f"error: cwd '{cwd_arg}' is outside the project root."
+            if not os.path.isdir(cwd_abs):
+                return f"error: cwd '{cwd_arg}' is not a directory."
+        else:
+            cwd_abs = self.root
+
+        # --- Timeout ---------------------------------------------------------
+        try:
+            timeout = min(int(a.get("timeout", 60)), 300)
+        except (TypeError, ValueError):
+            timeout = 60
+
+        # --- Calistir --------------------------------------------------------
+        # Yeniden yonlendirme varsa shell=True kullanmak gerekiyor;
+        # yoksa guvenli sekilde shell=False (argv listesi) ile calistir.
+        use_shell = bool(redir_match)
+        print(col(f"  [shell] {cmd_str[:120]}", "33"))
+        try:
+            result = subprocess.run(
+                cmd_str if use_shell else argv,
+                shell=use_shell,
+                cwd=cwd_abs,
+                capture_output=True,
+                timeout=timeout,
+                text=True,
+                errors="replace",
+            )
+            output = (result.stdout + result.stderr).strip()
+            rc     = result.returncode
+        except subprocess.TimeoutExpired:
+            return f"error: command timed out after {timeout}s"
+        except FileNotFoundError:
+            return f"error: executable not found: '{argv[0]}' — is it installed and on PATH?"
+        except Exception as e:
+            return f"error: {type(e).__name__}: {e}"
+
+        # --- Ciktiyi bicimlendir ---------------------------------------------
+        header = f"[exit {rc}]" if rc != 0 else "[exit 0]"
+        full   = f"{header}\n{output}" if output else header
+        return self.trunc(full) if len(full) > self.SHELL_OUTPUT_LIMIT else full
+
+    def _created_this_session(self, rel: str) -> bool:
+        """
+        Bu session'da t_write_file ile yaratilan dosyayi dondurur.
+        self.originals[rel] is None  =>  session oncesi yoktu, biz yarattik.
+        """
+        return rel in self.originals and self.originals[rel] is None
+
