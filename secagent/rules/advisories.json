@@ -1,0 +1,23 @@
+{
+  "checked": "2026-11-13",
+  "note": "Curated HINTS compiled from public advisories summarised on 2026-11-13 (GitHub Advisory DB, Vercel releases, third-party write-ups). Not authoritative and goes stale: confirm with `npm audit`, trivy or --online, and update this file regularly.",
+  "entries": [
+    {"package": ["next"], "severity": "high", "introduced": "0",
+     "fixed": ["15.5.28", "16.4.1"], "eol_below_fixed": true,
+     "title": "Next.js below latest patched releases (middleware/proxy bypass, SSRF, RSC/Server Action DoS, 'use cache' RCE on 16.0-16.4.0, SVG optimizer issue)",
+     "refs": ["GHSA-673q-mjm6-r5xr", "GHSA-2464-fhr4-w9xw", "GHSA-p3m5-59mp-jv5r", "May 2026 release 15.5.18/16.2.6 (13 advisories)", "CVE-2025-55182"],
+     "note": "13.x and 14.x have no patched release: upgrade to 15.5.28+ or 16.4.1+. Re-check for newer fixes."},
+    {"package": ["react-server-dom-webpack", "react-server-dom-parcel", "react-server-dom-turbopack"], "severity": "high", "introduced": "19.0.0",
+     "fixed": ["19.0.6", "19.1.7", "19.2.6"], "eol_below_fixed": false,
+     "title": "React Server Components packages below patched releases (DoS CVE-2026-23870; earlier RCE CVE-2025-55182 on 19.0-19.2.0)",
+     "refs": ["CVE-2026-23870", "CVE-2025-55182"], "note": "Usually a transitive dependency of next; update next and the lockfile."},
+    {"package": ["@sentry/nextjs"], "severity": "medium", "introduced": "9.36.0",
+     "fixed": ["9.47.2", "10.75.2"], "eol_below_fixed": false,
+     "title": "@sentry/nextjs below fixed releases (only relevant when tunnelRoute is configured on a webpack build)",
+     "refs": ["GHSA-mchm-gjx6-7h55"], "note": "Check sentry config for tunnelRoute before treating as exploitable."},
+    {"package": ["sharp"], "severity": "medium", "introduced": "0.0.0",
+     "fixed": ["0.35.5"], "eol_below_fixed": false,
+     "title": "sharp below 0.35.5 (SVG processing issue reachable through the Next.js image optimizer on glibc Linux)",
+     "refs": ["GHSA-2464-fhr4-w9xw"], "note": "Matters only when next/image optimization is used with untrusted images."}
+  ]
+}

@@ -1,0 +1,1 @@
+BLOCKED (not executed): you already ran this exact call at step @@STEP@@. Read ALREADY TRIED and NOTES, then use a different tool, path, glob or pattern (for example read a specific file range, or find with path=<app package dir>).

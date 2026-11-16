@@ -1,0 +1,1571 @@
+[
+ {
+  "id": "PY-EVAL",
+  "title": "eval/exec of dynamic code",
+  "cwe": "CWE-95",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\b(eval|exec)\\s*\\("
+ },
+ {
+  "id": "PY-OS-SYSTEM",
+  "title": "OS command via os.system/popen",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\bos\\.(system|popen)\\s*\\("
+ },
+ {
+  "id": "PY-SHELL-TRUE",
+  "title": "subprocess with shell=True",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "subprocess\\.\\w+\\([^)]*shell\\s*=\\s*True"
+ },
+ {
+  "id": "PY-PICKLE",
+  "title": "Unsafe deserialization (pickle/marshal/dill)",
+  "cwe": "CWE-502",
+  "severity": "high",
+  "category": "deserialization",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\b(pickle|cPickle|dill|marshal|shelve)\\.loads?\\s*\\("
+ },
+ {
+  "id": "PY-YAML-LOAD",
+  "title": "yaml.load without SafeLoader",
+  "cwe": "CWE-502",
+  "severity": "high",
+  "category": "deserialization",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\byaml\\.load\\s*\\((?![^)]*Safe)"
+ },
+ {
+  "id": "PY-SQL-FORMAT",
+  "title": "SQL built with string formatting",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\.(execute|executemany|raw|extra)\\s*\\(\\s*(f[\"']|[\"'][^\"']*[\"']\\s*(%|\\.format|\\+))"
+ },
+ {
+  "id": "PY-DEBUG",
+  "title": "Debug mode enabled",
+  "cwe": "CWE-489",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "(\\.run\\([^)]*debug\\s*=\\s*True|^\\s*DEBUG\\s*=\\s*True)"
+ },
+ {
+  "id": "PY-TLS-OFF",
+  "title": "TLS verification disabled",
+  "cwe": "CWE-295",
+  "severity": "high",
+  "category": "crypto",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "verify\\s*=\\s*False"
+ },
+ {
+  "id": "PY-WEAK-HASH",
+  "title": "Weak hash (md5/sha1)",
+  "cwe": "CWE-328",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "hashlib\\.(md5|sha1)\\s*\\("
+ },
+ {
+  "id": "PY-RANDOM",
+  "title": "Non-crypto RNG (check if used for tokens/secrets)",
+  "cwe": "CWE-338",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\brandom\\.(random|randint|choice|randrange|getrandbits)\\s*\\("
+ },
+ {
+  "id": "PY-MKTEMP",
+  "title": "Insecure temp file (mktemp)",
+  "cwe": "CWE-377",
+  "severity": "medium",
+  "category": "path",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "tempfile\\.mktemp\\s*\\("
+ },
+ {
+  "id": "PY-SSTI",
+  "title": "Template injection / autoescape off",
+  "cwe": "CWE-1336",
+  "severity": "high",
+  "category": "xss",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "(render_template_string\\s*\\(|autoescape\\s*=\\s*False|Template\\s*\\(\\s*(request|f[\"']))"
+ },
+ {
+  "id": "PY-MARK-SAFE",
+  "title": "Output escaping bypass (mark_safe/|safe)",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.py",
+   "*.html"
+  ],
+  "pattern": "(mark_safe\\s*\\(|\\|\\s*safe\\b)"
+ },
+ {
+  "id": "PY-CSRF-EXEMPT",
+  "title": "CSRF protection disabled on view",
+  "cwe": "CWE-352",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "@csrf_exempt"
+ },
+ {
+  "id": "PY-ALLOWED-HOSTS",
+  "title": "ALLOWED_HOSTS wildcard",
+  "cwe": "CWE-16",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "ALLOWED_HOSTS\\s*=\\s*\\[\\s*[\"']\\*[\"']"
+ },
+ {
+  "id": "PY-XML",
+  "title": "Stdlib XML parser (XXE/billion laughs if untrusted input)",
+  "cwe": "CWE-611",
+  "severity": "low",
+  "category": "injection",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "(from|import)\\s+xml\\.(etree|dom|sax)"
+ },
+ {
+  "id": "PY-OPEN-REQ",
+  "title": "File path from request data",
+  "cwe": "CWE-22",
+  "severity": "high",
+  "category": "path",
+  "globs": [
+   "*.py"
+  ],
+  "pattern": "\\b(open|send_file|send_from_directory)\\s*\\([^)]*request\\.(args|form|json|values|files)"
+ },
+ {
+  "id": "JS-EVAL",
+  "title": "eval/new Function",
+  "cwe": "CWE-95",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(eval|new\\s+Function)\\s*\\("
+ },
+ {
+  "id": "JS-EXEC",
+  "title": "child_process exec with dynamic string",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(exec|execSync)\\s*\\(\\s*(`|[^,)]*\\+)"
+ },
+ {
+  "id": "JS-INNERHTML",
+  "title": "DOM XSS sink (innerHTML/document.write/v-html)",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   "*.vue",
+   "*.html"
+  ],
+  "pattern": "(\\.innerHTML\\s*=|dangerouslySetInnerHTML|document\\.write\\s*\\(|v-html)"
+ },
+ {
+  "id": "JS-SQL-CONCAT",
+  "title": "SQL built by concatenation/template",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\.(query|execute|raw)\\s*\\(\\s*(`[^`]*\\$\\{|[\"'][^\"']*[\"']\\s*\\+)"
+ },
+ {
+  "id": "JS-CORS-STAR",
+  "title": "CORS wildcard origin",
+  "cwe": "CWE-942",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(origin\\s*:\\s*[\"']\\*[\"']|Access-Control-Allow-Origin[\"']?\\s*[:,]\\s*[\"']\\*[\"'])"
+ },
+ {
+  "id": "JS-TLS-OFF",
+  "title": "TLS verification disabled",
+  "cwe": "CWE-295",
+  "severity": "high",
+  "category": "crypto",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(rejectUnauthorized\\s*:\\s*false|NODE_TLS_REJECT_UNAUTHORIZED)"
+ },
+ {
+  "id": "JS-MATH-RANDOM",
+  "title": "Math.random (check if used for tokens/secrets)",
+  "cwe": "CWE-338",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "Math\\.random\\s*\\("
+ },
+ {
+  "id": "JS-JWT",
+  "title": "JWT decode without verify / alg none",
+  "cwe": "CWE-347",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(algorithms?\\s*:\\s*\\[?\\s*[\"']none[\"']|jwt\\.decode\\s*\\()"
+ },
+ {
+  "id": "JS-PROTO-POLLUTION",
+  "title": "Deep merge of untrusted object (prototype pollution)",
+  "cwe": "CWE-1321",
+  "severity": "low",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(_\\.merge|_\\.defaultsDeep|\\$\\.extend\\(\\s*true|__proto__)"
+ },
+ {
+  "id": "JS-SSRF",
+  "title": "HTTP request to user-controlled URL",
+  "cwe": "CWE-918",
+  "severity": "high",
+  "category": "ssrf",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(axios|fetch|got|request|http\\.get|https\\.get)\\s*(\\.\\w+)?\\s*\\(\\s*(req\\.|request\\.|params|query|body)"
+ },
+ {
+  "id": "JS-REDIRECT",
+  "title": "Open redirect from request data",
+  "cwe": "CWE-601",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "res\\.redirect\\s*\\(\\s*req\\."
+ },
+ {
+  "id": "JS-PATH",
+  "title": "File path from request data",
+  "cwe": "CWE-22",
+  "severity": "high",
+  "category": "path",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(readFile|readFileSync|createReadStream|sendFile)\\s*\\([^)]*req\\."
+ },
+ {
+  "id": "JAVA-EXEC",
+  "title": "Runtime.exec / ProcessBuilder",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(Runtime\\.getRuntime\\(\\)\\.exec|new\\s+ProcessBuilder)"
+ },
+ {
+  "id": "JAVA-SQL-CONCAT",
+  "title": "SQL built by concatenation",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(createStatement|executeQuery|executeUpdate|prepareStatement|createQuery|createNativeQuery)\\s*\\([^)]*\\+"
+ },
+ {
+  "id": "JAVA-DESERIAL",
+  "title": "Unsafe deserialization",
+  "cwe": "CWE-502",
+  "severity": "high",
+  "category": "deserialization",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(new\\s+ObjectInputStream|XMLDecoder|enableDefaultTyping|readUnshared)"
+ },
+ {
+  "id": "JAVA-XXE",
+  "title": "XML parser factory (check XXE hardening)",
+  "cwe": "CWE-611",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(DocumentBuilderFactory|SAXParserFactory|XMLInputFactory|TransformerFactory)\\.newInstance"
+ },
+ {
+  "id": "JAVA-WEAK-CRYPTO",
+  "title": "Weak/ECB cipher or hash",
+  "cwe": "CWE-327",
+  "severity": "medium",
+  "category": "crypto",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "getInstance\\(\\s*\"(DES|DESede|RC4|MD5|SHA-?1|AES|AES/ECB[^\"]*)\"\\s*\\)"
+ },
+ {
+  "id": "JAVA-TRUST-ALL",
+  "title": "Custom trust manager / hostname verifier",
+  "cwe": "CWE-295",
+  "severity": "high",
+  "category": "crypto",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(checkServerTrusted|ALLOW_ALL_HOSTNAME_VERIFIER|setHostnameVerifier)"
+ },
+ {
+  "id": "JAVA-RANDOM",
+  "title": "java.util.Random (check if security-sensitive)",
+  "cwe": "CWE-338",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "new\\s+Random\\s*\\("
+ },
+ {
+  "id": "JAVA-SPEL",
+  "title": "Expression language evaluation",
+  "cwe": "CWE-917",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "(SpelExpressionParser|parseExpression\\s*\\()"
+ },
+ {
+  "id": "JAVA-CSRF-OFF",
+  "title": "CSRF protection disabled",
+  "cwe": "CWE-352",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "csrf\\s*(\\(\\))?\\s*\\.\\s*disable"
+ },
+ {
+  "id": "JAVA-PATH",
+  "title": "File path from request data",
+  "cwe": "CWE-22",
+  "severity": "high",
+  "category": "path",
+  "globs": [
+   "*.java",
+   "*.kt"
+  ],
+  "pattern": "new\\s+File\\s*\\([^)]*(getParameter|request\\.)"
+ },
+ {
+  "id": "GO-EXEC",
+  "title": "exec.Command (check argument source)",
+  "cwe": "CWE-78",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "exec\\.Command(Context)?\\s*\\("
+ },
+ {
+  "id": "GO-SQL-SPRINTF",
+  "title": "SQL built with Sprintf/concat",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "\\.(Query|Exec|QueryRow)(Context)?\\s*\\(\\s*(fmt\\.Sprintf|\"[^\"]*\"\\s*\\+)"
+ },
+ {
+  "id": "GO-TLS-SKIP",
+  "title": "InsecureSkipVerify true",
+  "cwe": "CWE-295",
+  "severity": "high",
+  "category": "crypto",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "InsecureSkipVerify\\s*:\\s*true"
+ },
+ {
+  "id": "GO-MATH-RAND",
+  "title": "math/rand (check if security-sensitive)",
+  "cwe": "CWE-338",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "\"math/rand\\\""
+ },
+ {
+  "id": "GO-WEAK-CRYPTO",
+  "title": "Weak crypto package",
+  "cwe": "CWE-327",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "\"crypto/(md5|sha1|des|rc4)\\\""
+ },
+ {
+  "id": "GO-HTML-TRUST",
+  "title": "template.HTML bypasses escaping",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.go"
+  ],
+  "pattern": "template\\.(HTML|JS|URL)\\s*\\("
+ },
+ {
+  "id": "PHP-EVAL",
+  "title": "eval/assert/create_function",
+  "cwe": "CWE-95",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "\\b(eval|assert|create_function)\\s*\\("
+ },
+ {
+  "id": "PHP-CMD",
+  "title": "Command execution functions",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "\\b(system|exec|shell_exec|passthru|popen|proc_open)\\s*\\("
+ },
+ {
+  "id": "PHP-SQL-INPUT",
+  "title": "Query containing request superglobal",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "(mysql_query|mysqli_query|->query)\\s*\\([^)]*\\$_(GET|POST|REQUEST|COOKIE)"
+ },
+ {
+  "id": "PHP-INCLUDE",
+  "title": "include/require with request data",
+  "cwe": "CWE-98",
+  "severity": "high",
+  "category": "path",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "\\b(include|require)(_once)?\\b[^;]*\\$_(GET|POST|REQUEST)"
+ },
+ {
+  "id": "PHP-UNSERIALIZE",
+  "title": "unserialize()",
+  "cwe": "CWE-502",
+  "severity": "high",
+  "category": "deserialization",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "\\bunserialize\\s*\\("
+ },
+ {
+  "id": "PHP-XSS",
+  "title": "echo of request data",
+  "cwe": "CWE-79",
+  "severity": "high",
+  "category": "xss",
+  "globs": [
+   "*.php"
+  ],
+  "pattern": "\\b(echo|print)\\b[^;]*\\$_(GET|POST|REQUEST|COOKIE)"
+ },
+ {
+  "id": "RB-EVAL",
+  "title": "eval-family call",
+  "cwe": "CWE-95",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.rb"
+  ],
+  "pattern": "\\b(eval|instance_eval|class_eval)\\b"
+ },
+ {
+  "id": "RB-YAML",
+  "title": "YAML.load",
+  "cwe": "CWE-502",
+  "severity": "high",
+  "category": "deserialization",
+  "globs": [
+   "*.rb"
+  ],
+  "pattern": "\\bYAML\\.load\\s*\\("
+ },
+ {
+  "id": "RB-SQL-INTERP",
+  "title": "SQL string interpolation",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.rb"
+  ],
+  "pattern": "\\.(where|find_by_sql|order|execute)\\s*\\(\\s*\"[^\"]*#\\{"
+ },
+ {
+  "id": "RB-SYSTEM",
+  "title": "Shell execution",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.rb"
+  ],
+  "pattern": "(Kernel\\.(system|exec)|%x\\(|\\bsystem\\s*\\(\\s*[\"'`]?[^)]*#\\{)"
+ },
+ {
+  "id": "C-UNSAFE-STR",
+  "title": "Unbounded string function",
+  "cwe": "CWE-120",
+  "severity": "high",
+  "category": "memory",
+  "globs": [
+   "*.c",
+   "*.cc",
+   "*.cpp",
+   "*.h"
+  ],
+  "pattern": "\\b(strcpy|strcat|sprintf|vsprintf|gets)\\s*\\("
+ },
+ {
+  "id": "C-SYSTEM",
+  "title": "system()/popen()",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.c",
+   "*.cc",
+   "*.cpp",
+   "*.h"
+  ],
+  "pattern": "\\b(system|popen)\\s*\\("
+ },
+ {
+  "id": "GEN-SQL-STR",
+  "title": "SQL statement concatenated with variables",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.py",
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   "*.java",
+   "*.kt",
+   "*.go",
+   "*.php",
+   "*.rb"
+  ],
+  "pattern": "(?i)[\"'`]\\s*(select|insert|update|delete)\\s[^\"'`]*[\"'`]\\s*\\+"
+ },
+ {
+  "id": "GEN-HTTP-URL",
+  "title": "Cleartext http:// URL",
+  "cwe": "CWE-319",
+  "severity": "low",
+  "category": "crypto",
+  "globs": [
+   "*.py",
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   "*.java",
+   "*.kt",
+   "*.go",
+   "*.php",
+   "*.rb"
+  ],
+  "pattern": "[\"']http://(?!localhost|127\\.|0\\.0\\.0\\.0|\\[::1\\]|schemas|www\\.w3\\.org)"
+ },
+ {
+  "id": "GEN-SECURITY-TODO",
+  "title": "Security-related TODO/FIXME",
+  "cwe": "CWE-1059",
+  "severity": "info",
+  "category": "other",
+  "globs": [
+   "*.py",
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   "*.java",
+   "*.kt",
+   "*.go",
+   "*.php",
+   "*.rb"
+  ],
+  "pattern": "(?i)(TODO|FIXME|HACK|XXX).*(security|auth|password|sanitiz|csrf|xss|injection|encrypt)"
+ },
+ {
+  "id": "DOCKER-ROOT",
+  "title": "Container runs as root",
+  "cwe": "CWE-250",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "Dockerfile*",
+   "*.dockerfile"
+  ],
+  "pattern": "^\\s*USER\\s+(root|0)\\s*$"
+ },
+ {
+  "id": "DOCKER-UNPINNED",
+  "title": "Unpinned base image (no tag or :latest)",
+  "cwe": "CWE-1104",
+  "severity": "low",
+  "category": "config",
+  "globs": [
+   "Dockerfile*",
+   "*.dockerfile"
+  ],
+  "pattern": "^\\s*FROM\\s+[^:@\\s]+(:latest)?(\\s+[Aa][Ss]\\s+\\S+)?\\s*$"
+ },
+ {
+  "id": "DOCKER-ADD-URL",
+  "title": "ADD from remote URL",
+  "cwe": "CWE-494",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "Dockerfile*",
+   "*.dockerfile"
+  ],
+  "pattern": "^\\s*ADD\\s+https?://"
+ },
+ {
+  "id": "DOCKER-CURL-PIPE",
+  "title": "curl|sh in build",
+  "cwe": "CWE-494",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "Dockerfile*",
+   "*.dockerfile",
+   "*.yml",
+   "*.yaml",
+   "*.sh"
+  ],
+  "pattern": "(curl|wget)[^|\\n]*\\|\\s*(sudo\\s+)?(ba)?sh\\b"
+ },
+ {
+  "id": "DOCKER-SECRET-ENV",
+  "title": "Secret in ENV/ARG",
+  "cwe": "CWE-798",
+  "severity": "high",
+  "category": "secrets",
+  "globs": [
+   "Dockerfile*",
+   "*.dockerfile"
+  ],
+  "pattern": "(?i)^\\s*(ENV|ARG)\\s+\\w*(PASSWORD|SECRET|TOKEN|API_?KEY)\\w*[= ]\\s*[^\\s$]+"
+ },
+ {
+  "id": "K8S-PRIVILEGED",
+  "title": "Privileged container",
+  "cwe": "CWE-250",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.yml",
+   "*.yaml"
+  ],
+  "pattern": "privileged:\\s*true"
+ },
+ {
+  "id": "K8S-HOST-NS",
+  "title": "Host network/PID/IPC namespace",
+  "cwe": "CWE-250",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.yml",
+   "*.yaml"
+  ],
+  "pattern": "host(Network|PID|IPC):\\s*true"
+ },
+ {
+  "id": "K8S-PRIV-ESC",
+  "title": "allowPrivilegeEscalation true / runAsUser 0",
+  "cwe": "CWE-250",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.yml",
+   "*.yaml"
+  ],
+  "pattern": "(allowPrivilegeEscalation:\\s*true|runAsUser:\\s*0\\b)"
+ },
+ {
+  "id": "DOCKER-SOCK",
+  "title": "Docker socket mounted",
+  "cwe": "CWE-250",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.yml",
+   "*.yaml",
+   "Dockerfile*",
+   "*.dockerfile"
+  ],
+  "pattern": "/var/run/docker\\.sock"
+ },
+ {
+  "id": "TF-OPEN-CIDR",
+  "title": "Ingress open to the world",
+  "cwe": "CWE-284",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.tf"
+  ],
+  "pattern": "cidr_blocks\\s*=\\s*\\[\\s*\"0\\.0\\.0\\.0/0\\\""
+ },
+ {
+  "id": "TF-PUBLIC-ACL",
+  "title": "Public bucket ACL",
+  "cwe": "CWE-732",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.tf"
+  ],
+  "pattern": "acl\\s*=\\s*\"public-read(-write)?\\\""
+ },
+ {
+  "id": "TF-PUBLIC-DB",
+  "title": "Publicly accessible database",
+  "cwe": "CWE-284",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.tf"
+  ],
+  "pattern": "publicly_accessible\\s*=\\s*true"
+ },
+ {
+  "id": "TF-NO-ENCRYPT",
+  "title": "Encryption disabled",
+  "cwe": "CWE-311",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.tf"
+  ],
+  "pattern": "(storage_)?encrypted\\s*=\\s*false"
+ },
+ {
+  "id": "CI-SCRIPT-INJECTION",
+  "title": "GitHub Actions script injection via event data",
+  "cwe": "CWE-78",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.yml",
+   "*.yaml"
+  ],
+  "pattern": "\\$\\{\\{\\s*github\\.(event\\.(issue|pull_request|comment|review|head_commit|discussion)[\\w.]*\\.(title|body|message|label|name)|head_ref)"
+ },
+ {
+  "id": "CI-PR-TARGET",
+  "title": "pull_request_target (privileged workflow on untrusted PR)",
+  "cwe": "CWE-94",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.yml",
+   "*.yaml"
+  ],
+  "pattern": "pull_request_target"
+ },
+ {
+  "id": "NGINX-AUTOINDEX",
+  "title": "Directory listing / version disclosure",
+  "cwe": "CWE-548",
+  "severity": "low",
+  "category": "config",
+  "globs": [
+   "*.conf"
+  ],
+  "pattern": "(autoindex\\s+on|server_tokens\\s+on)"
+ },
+ {
+  "id": "REACT-HREF-USER",
+  "title": "User-controlled href/src/action (javascript: URL XSS)",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(href|src|action|formAction)\\s*=\\s*\\{[^}]*(searchParams|\\bsp\\b|useSearchParams|query\\.|props\\.(url|href|link|src)|userInput|\\binput\\b)"
+ },
+ {
+  "id": "REACT-TARGET-BLANK",
+  "title": "target=_blank without rel (check rel on the next line)",
+  "cwe": "CWE-1022",
+  "severity": "low",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "target\\s*=\\s*[\"']_blank[\"'](?![^>]*\\brel\\s*=)"
+ },
+ {
+  "id": "REACT-TOKEN-STORAGE",
+  "title": "Auth token stored in localStorage/sessionStorage",
+  "cwe": "CWE-922",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(?i)(localStorage|sessionStorage)\\.setItem\\(\\s*[\"'`][^\"'`]*(token|jwt|auth|session|secret|credential)"
+ },
+ {
+  "id": "REACT-DOC-COOKIE",
+  "title": "Client-side cookie write (cannot be HttpOnly)",
+  "cwe": "CWE-1004",
+  "severity": "low",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "document\\.cookie\\s*=(?!=)"
+ },
+ {
+  "id": "REACT-POSTMESSAGE-STAR",
+  "title": "postMessage with wildcard targetOrigin",
+  "cwe": "CWE-345",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "postMessage\\s*\\([^)]*,\\s*[\"']\\*[\"']"
+ },
+ {
+  "id": "REACT-MESSAGE-LISTENER",
+  "title": "message listener (verify event.origin)",
+  "cwe": "CWE-346",
+  "severity": "low",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "addEventListener\\s*\\(\\s*[\"']message[\"']"
+ },
+ {
+  "id": "REACT-OPEN-REDIRECT",
+  "title": "Client redirect target taken from URL/query data",
+  "cwe": "CWE-601",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(\\b(window\\.)?location(\\.href|\\.assign|\\.replace)?\\s*(=(?!=)|\\()|router\\.(push|replace)\\s*\\()[^;\\n]*(searchParams|URLSearchParams|\\.query\\b|params\\.get|returnUrl|redirectUrl|callbackUrl|redirect_uri)"
+ },
+ {
+  "id": "REACT-MD-RAW-HTML",
+  "title": "Markdown/HTML renderer allows raw HTML",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(rehypeRaw|allowDangerousHtml|skipHtml\\s*=\\s*\\{?\\s*false|escapeHtml\\s*=\\s*\\{?\\s*false|html\\s*:\\s*true)"
+ },
+ {
+  "id": "REACT-SRCDOC",
+  "title": "iframe srcDoc (check content origin and sandbox)",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\bsrcDoc\\s*="
+ },
+ {
+  "id": "ENV-PUBLIC-SECRET",
+  "title": "Secret-looking variable exposed to the browser bundle",
+  "cwe": "CWE-200",
+  "severity": "high",
+  "category": "secrets",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   ".env",
+   ".env.*",
+   "*.env"
+  ],
+  "pattern": "\\b(NEXT_PUBLIC|REACT_APP|VITE|EXPO_PUBLIC|GATSBY|PUBLIC)_\\w*(SECRET|PASSWORD|PRIVATE|SERVICE_ROLE)\\w*"
+ },
+ {
+  "id": "ENV-PUBLIC-KEY",
+  "title": "Token/key variable exposed to the browser bundle (confirm it is meant to be public)",
+  "cwe": "CWE-200",
+  "severity": "medium",
+  "category": "secrets",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs",
+   ".env",
+   ".env.*",
+   "*.env"
+  ],
+  "pattern": "\\b(NEXT_PUBLIC|REACT_APP|VITE|EXPO_PUBLIC|GATSBY)_\\w*(TOKEN|API_?KEY|ACCESS_?KEY|CREDENTIAL)\\w*"
+ },
+ {
+  "id": "NEXT-SERVER-ACTION",
+  "title": "Server Action is a public endpoint (verify authn, authz, input validation)",
+  "cwe": "CWE-862",
+  "severity": "low",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "^\\s*[\"']use server[\"']\\s*;?\\s*$"
+ },
+ {
+  "id": "NEXT-REDIRECT-USER",
+  "title": "redirect() target from request-controlled data",
+  "cwe": "CWE-601",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(redirect|permanentRedirect|NextResponse\\.redirect)\\s*\\([^)]*(searchParams|\\.query\\b|params\\.get|req\\.|request\\.|formData\\.get|callbackUrl|returnUrl)"
+ },
+ {
+  "id": "NEXT-FETCH-USER",
+  "title": "Server-side fetch to request-controlled URL (SSRF)",
+  "cwe": "CWE-918",
+  "severity": "high",
+  "category": "ssrf",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\bfetch\\s*\\(\\s*(`[^`]*\\$\\{[^}]*(searchParams|params|body|query|formData|url)[^}]*\\}|[^,)]*(searchParams\\.get|formData\\.get|body\\.\\w+|query\\.\\w+))"
+ },
+ {
+  "id": "NEXT-COOKIE-FLAGS",
+  "title": "Cookie set with httpOnly/secure disabled",
+  "cwe": "CWE-1004",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\b(httpOnly|secure)\\s*:\\s*false"
+ },
+ {
+  "id": "NEXT-CORS-REFLECT",
+  "title": "CORS allow-origin reflected from the request",
+  "cwe": "CWE-942",
+  "severity": "high",
+  "category": "config",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "Access-Control-Allow-Origin[\"']?\\s*[:,]\\s*(req|request|origin|headers|\\w+\\.headers)"
+ },
+ {
+  "id": "NEXT-CSP-UNSAFE",
+  "title": "CSP allows unsafe-inline/unsafe-eval",
+  "cwe": "CWE-693",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "unsafe-(inline|eval)"
+ },
+ {
+  "id": "NEXT-IMG-WILDCARD",
+  "title": "next/image remote host wildcard (SSRF/abuse of optimizer)",
+  "cwe": "CWE-918",
+  "severity": "medium",
+  "category": "ssrf",
+  "globs": [
+   "next.config.*"
+  ],
+  "pattern": "(hostname\\s*:\\s*[\"']\\*\\*?[\"']|domains\\s*:\\s*\\[\\s*[\"']\\*)"
+ },
+ {
+  "id": "NEXT-SVG-IMAGES",
+  "title": "dangerouslyAllowSVG enabled",
+  "cwe": "CWE-79",
+  "severity": "medium",
+  "category": "xss",
+  "globs": [
+   "next.config.*"
+  ],
+  "pattern": "dangerouslyAllowSVG\\s*:\\s*true"
+ },
+ {
+  "id": "NEXT-SOURCEMAPS",
+  "title": "Production browser source maps enabled",
+  "cwe": "CWE-540",
+  "severity": "medium",
+  "category": "config",
+  "globs": [
+   "next.config.*"
+  ],
+  "pattern": "productionBrowserSourceMaps\\s*:\\s*true"
+ },
+ {
+  "id": "NEXT-CONFIG-ENV",
+  "title": "next.config env{} inlines values into the client bundle",
+  "cwe": "CWE-200",
+  "severity": "low",
+  "category": "secrets",
+  "globs": [
+   "next.config.*"
+  ],
+  "pattern": "^\\s*env\\s*:\\s*\\{"
+ },
+ {
+  "id": "NEXT-ACTION-ORIGINS",
+  "title": "Server Actions allowedOrigins wildcard",
+  "cwe": "CWE-352",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "next.config.*"
+  ],
+  "pattern": "allowedOrigins\\s*:\\s*\\[[^\\]]*[\"']\\*"
+ },
+ {
+  "id": "NEXT-FWD-HEADER",
+  "title": "Spoofable forwarded header trusted (host/IP/proto)",
+  "cwe": "CWE-348",
+  "severity": "low",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "headers(\\(\\))?\\.get\\(\\s*[\"'](x-forwarded-(for|host|proto)|x-real-ip|host)[\"']\\s*\\)"
+ },
+ {
+  "id": "NEXT-MW-SUBREQUEST",
+  "title": "x-middleware-subrequest referenced (middleware bypass class)",
+  "cwe": "CWE-290",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "x-middleware-subrequest"
+ },
+ {
+  "id": "NEXT-CACHE-USER-DATA",
+  "title": "Cached/ISR data (confirm it is not per-user or authenticated)",
+  "cwe": "CWE-524",
+  "severity": "low",
+  "category": "config",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(cache\\s*:\\s*[\"']force-cache[\"']|export\\s+const\\s+revalidate\\s*=|unstable_cache\\s*\\(|[\"']use cache[\"'])"
+ },
+ {
+  "id": "NEXTAUTH-ACCOUNT-LINKING",
+  "title": "allowDangerousEmailAccountLinking enabled (account takeover)",
+  "cwe": "CWE-287",
+  "severity": "high",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "allowDangerousEmailAccountLinking\\s*:\\s*true"
+ },
+ {
+  "id": "NEXTAUTH-SKIP-CSRF",
+  "title": "Auth.js CSRF check disabled",
+  "cwe": "CWE-352",
+  "severity": "high",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "skipCSRFCheck"
+ },
+ {
+  "id": "NEXTAUTH-TRUST-HOST",
+  "title": "trustHost enabled (confirm behind trusted proxy)",
+  "cwe": "CWE-348",
+  "severity": "low",
+  "category": "config",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "trustHost\\s*:\\s*true"
+ },
+ {
+  "id": "PRISMA-RAW-UNSAFE",
+  "title": "Prisma $queryRawUnsafe/$executeRawUnsafe",
+  "cwe": "CWE-89",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\$(queryRawUnsafe|executeRawUnsafe)\\b"
+ },
+ {
+  "id": "RAW-SQL-HELPER",
+  "title": "Raw SQL helper with dynamic input (Prisma.raw, drizzle sql.raw, knex.raw)",
+  "cwe": "CWE-89",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(Prisma\\.raw|\\bsql\\.raw|\\.raw)\\s*\\(\\s*(`[^`]*\\$\\{|[^)'\"`]*\\+|[a-zA-Z_]\\w*\\s*\\))"
+ },
+ {
+  "id": "NOSQL-INJECTION",
+  "title": "Request data passed directly into a Mongo filter",
+  "cwe": "CWE-943",
+  "severity": "high",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\.(find|findOne|findOneAndUpdate|findOneAndDelete|updateOne|updateMany|deleteOne|deleteMany|aggregate|countDocuments)\\s*\\(\\s*(req\\.(body|query|params)|body|query|await\\s+(req|request)\\.json\\(\\))\\b"
+ },
+ {
+  "id": "NOSQL-WHERE",
+  "title": "$where operator",
+  "cwe": "CWE-943",
+  "severity": "medium",
+  "category": "injection",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "[\"']?\\$where[\"']?\\s*:"
+ },
+ {
+  "id": "JWT-IGNORE-EXP",
+  "title": "JWT verification ignores expiration",
+  "cwe": "CWE-613",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "ignoreExpiration\\s*:\\s*true"
+ },
+ {
+  "id": "JOSE-DECODE",
+  "title": "JWT decoded without verification (decodeJwt)",
+  "cwe": "CWE-347",
+  "severity": "medium",
+  "category": "auth",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "\\bdecodeJwt\\s*\\("
+ },
+ {
+  "id": "MASS-ASSIGNMENT",
+  "title": "Request body spread/assigned into a DB write (mass assignment)",
+  "cwe": "CWE-915",
+  "severity": "medium",
+  "category": "input",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "(\\b(data|values|\\$set)\\s*:\\s*(req\\.body|body|payload|input)\\b|\\.\\.\\.\\s*(req\\.body|body|payload|await\\s+(req|request)\\.json\\(\\)))"
+ },
+ {
+  "id": "TS-UNCHECKED-REQUEST",
+  "title": "Request body asserted to a type without runtime validation",
+  "cwe": "CWE-20",
+  "severity": "medium",
+  "category": "input",
+  "globs": [
+   "*.ts",
+   "*.tsx"
+  ],
+  "pattern": "\\b(req|request)\\.(body|json\\(\\)|formData\\(\\))\\s*\\)?\\s+as\\s+[\\w{(]"
+ },
+ {
+  "id": "TS-UNCHECKED-JSON",
+  "title": "JSON.parse asserted to a type without validation",
+  "cwe": "CWE-20",
+  "severity": "low",
+  "category": "input",
+  "globs": [
+   "*.ts",
+   "*.tsx"
+  ],
+  "pattern": "JSON\\.parse\\([^)]*\\)\\s+as\\s+\\w"
+ },
+ {
+  "id": "TS-REQ-DESTRUCTURE",
+  "title": "Request body destructured without schema validation (look for zod/valibot)",
+  "cwe": "CWE-20",
+  "severity": "low",
+  "category": "input",
+  "globs": [
+   "*.js",
+   "*.jsx",
+   "*.ts",
+   "*.tsx",
+   "*.mjs",
+   "*.cjs"
+  ],
+  "pattern": "const\\s*\\{[^}]+\\}\\s*=\\s*(await\\s+)?(req\\.body|(req|request)\\.json\\(\\))"
+ },
+ {
+  "id": "TS-SUPPRESS",
+  "title": "Type checks suppressed (@ts-ignore/@ts-nocheck)",
+  "cwe": "CWE-20",
+  "severity": "info",
+  "category": "other",
+  "globs": [
+   "*.ts",
+   "*.tsx"
+  ],
+  "pattern": "@ts-(ignore|nocheck)"
+ },
+ {
+  "id": "TS-ANY-INPUT",
+  "title": "External input typed as any",
+  "cwe": "CWE-20",
+  "severity": "info",
+  "category": "input",
+  "globs": [
+   "*.ts",
+   "*.tsx"
+  ],
+  "pattern": "\\b(body|input|data|payload|params|query)\\s*:\\s*any\\b"
+ }
+]

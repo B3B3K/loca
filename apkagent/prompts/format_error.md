@@ -1,0 +1,1 @@
+FORMAT ERROR: no <tool> call found. Reply with ONE short plain sentence (no markdown) and then exactly one call like <tool>{"name": "find", "args": {"pattern": "UUID"}}</tool> using a real tool name and args. Use finish when done. Never write an OBSERVATION yourself.

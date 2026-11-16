@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apkagent"
+version = "0.1.0"
+description = "JADX + local LLM (Ollama / llama.cpp) agentic APK protocol reverse-engineering library"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+apkagent = "apkagent.cli:main"
+secagent = "secagent.cli:main"
+pentester = "pentester.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["apkagent*", "secagent*", "pentester*"]
+
+[tool.setuptools.package-data]
+apkagent = ["prompts/*.md", "prompts/*.json", "prompts/phases/*.md"]
+secagent = ["prompts/*.md", "prompts/*.json", "prompts/phases/*.md", "rules/*.json"]
+pentester = ["prompts/*.md", "prompts/*.json", "prompts/phases/*.md"]

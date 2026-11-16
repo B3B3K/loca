@@ -1,0 +1,9 @@
+{
+  "phases": [
+    {"id": "recon",   "prompt": "phases/recon.md",   "max_steps": 10},
+    {"id": "map",     "prompt": "phases/map.md",     "max_steps": 25},
+    {"id": "framing", "prompt": "phases/framing.md", "max_steps": 25},
+    {"id": "sdk",     "prompt": "phases/sdk.md",     "max_steps": 30},
+    {"id": "verify",  "prompt": "phases/verify.md",  "max_steps": 15}
+  ]
+}

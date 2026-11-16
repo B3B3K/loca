@@ -1,0 +1,51 @@
+{
+  "phases": [
+    {
+      "id": "recon",
+      "prompt": "phases/recon.md",
+      "max_steps": 10
+    },
+    {
+      "id": "automated",
+      "prompt": "phases/automated.md",
+      "max_steps": 12
+    },
+    {
+      "id": "triage_1",
+      "prompt": "phases/triage.md",
+      "max_steps": 30
+    },
+    {
+      "id": "triage_2",
+      "prompt": "phases/triage.md",
+      "max_steps": 30
+    },
+    {
+      "id": "hunt",
+      "prompt": "phases/hunt.md",
+      "max_steps": 35
+    },
+    {
+      "id": "nextjs",
+      "prompt": "phases/nextjs.md",
+      "max_steps": 30,
+      "when": "nextjs"
+    },
+    {
+      "id": "frontend",
+      "prompt": "phases/frontend.md",
+      "max_steps": 20,
+      "when": "react"
+    },
+    {
+      "id": "infra",
+      "prompt": "phases/infra.md",
+      "max_steps": 15
+    },
+    {
+      "id": "summary",
+      "prompt": "phases/summary.md",
+      "max_steps": 6
+    }
+  ]
+}

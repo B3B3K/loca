@@ -1,0 +1,6 @@
+[
+  {"role": "user", "content": "EXAMPLE of the required turn format. Task: find the GATT callback class."},
+  {"role": "assistant", "content": "I will search for the callback base class.\n<tool>{\"name\": \"find\", \"args\": {\"pattern\": \"extends BluetoothGattCallback\"}}</tool>"},
+  {"role": "user", "content": "OBSERVATION:\nsources/com/acme/ble/GattHandler.java:12: public class GattHandler extends BluetoothGattCallback {\n\n(End of example. The real task follows. Always answer with one short plain sentence and exactly one <tool> call, no markdown.)"},
+  {"role": "assistant", "content": "Understood. One short sentence and one <tool> call per turn."}
+]
